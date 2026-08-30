@@ -1,23 +1,320 @@
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Raccogli i dati inseriti dallo studente
-            const studente = {
-                nome: document.getElementById('studentName').value || 'Studente',
-                eta: document.getElementById('studentAge').value,
-                classe: document.getElementById('studentClass').value,
-                votoObiettivo: document.getElementById('targetGrade').value
-            };
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudentHub1 - Spazio Studio</title>
+    <link href="https://googleapis.com" rel="stylesheet">
+    <style>
+        :root {
+            --bg-white: #ffffff;
+            --bg-gray: #f8f9fa;
+            --text-dark: #2d3748;
+            --text-muted: #718096;
+            --primary-green: #57886c;
+            --primary-green-hover: #436a53;
+            --primary-green-light: #eef4f0;
+            --border-color: #e2e8f0;
+        }
 
-            // Salva i dati localmente nel browser
-            localStorage.setItem('studyMate_user', JSON.stringify(studente));
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+        }
 
-            // Trova il percorso corretto per la dashboard indipendentemente dal dispositivo
-            const currentPath = window.location.pathname;
-            const basePath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
-            
-            // Reindirizza alla dashboard
-            window.location.href = basePath + 'dashboard.html';
-        });
-    </script>
+        body {
+            background-color: var(--bg-gray);
+            color: var(--text-dark);
+            min-height: 100vh;
+        }
+
+        /* SCHERMATA DI ACCESSO (LOGIN) */
+        #login-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 1rem;
+        }
+
+        .login-container {
+            background: var(--bg-white);
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 450px;
+            border: 1px solid var(--border-color);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--primary-green);
+            margin-bottom: 0.5rem;
+        }
+
+        .login-header p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #4a5568;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background-color: var(--bg-gray);
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary-green);
+            background-color: #fff;
+        }
+
+        /* APPLICAZIONE REALE (DASHBOARD) - NASCOSTA ALL'INIZIO */
+        #main-app {
+            display: none; 
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .user-info-bar {
+            background-color: var(--primary-green-light);
+            padding: 0.5rem 1rem;
+            font-size: 0.75rem;
+            color: var(--primary-green);
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .header {
+            background-color: var(--bg-white);
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h3 {
+            color: var(--primary-green);
+            font-size: 1.2rem;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: var(--bg-white);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tab-item {
+            flex: 1;
+            text-align: center;
+            padding: 0.9rem 0;
+            font-weight: 500;
+            font-size: 0.85rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-item.active {
+            color: var(--primary-green);
+            border-bottom-color: var(--primary-green);
+            background-color: var(--primary-green-light);
+        }
+
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .view-section {
+            display: none;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+
+        /* INTERFACCIA CHAT IA */
+        .chat-container {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            height: 52vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .chat-messages {
+            padding: 1rem;
+            overflow-y: auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .message {
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            max-width: 85%;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .message.ai {
+            background-color: var(--bg-gray);
+            align-self: flex-start;
+        }
+
+        .message.user {
+            background-color: var(--primary-green);
+            color: white;
+            align-self: flex-end;
+        }
+
+        .chat-controls {
+            padding: 0.75rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-controls input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            outline: none;
+        }
+
+        .btn {
+            padding: 0.75rem 1rem;
+            background-color: var(--primary-green);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .btn:hover { background-color: var(--primary-green-hover); }
+
+        .ai-features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-white);
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+        }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .card-box {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SCHERMATA 1: ACCESSO (LOGIN) -->
+    <div id="login-screen">
+        <div class="login-container">
+            <div class="login-header">
+                <h1>StudentHub1</h1>
+                <p>Configura il tuo spazio di studio intelligente</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="studentName">Nome (Facoltativo)</label>
+                    <input type="text" id="studentName" placeholder="Es. Mario">
+                </div>
+                <div class="form-group">
+                    <label for="studentAge">Età</label>
+                    <input type="number" id="studentAge" required min="6" max="99" placeholder="Es. 16">
+                </div>
+                <div class="form-group">
+                    <label for="studentClass">Classe / Anno di corso</label>
+                    <input type="text" id="studentClass" required placeholder="Es. 3A Liceo, Università...">
+                </div>
+                <div class="form-group">
+                    <label for="targetGrade">Voto obiettivo</label>
+                    <input type="text" id="targetGrade" required placeholder="Es. 8/10, 30L...">
+                </div>
+                <button type="submit" class="btn" style="width: 100%; padding: 0.85rem; margin-top: 1rem;">Inizia a Studiare</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- SCHERMATA 2: APPLICAZIONE (DASHBOARD) -->
+    <div id="main-app">
+        <div class="user-info-bar">
+            <span id="profile-name">👋 Ciao</span>
+            <span id="profile-details">Classe: - | Target: -</span>
+        </div>
+
+        <div class="header">
+            <h3 id="section-title">🤖 Assistente IA</h3>
+            <button class="btn" style="background-color: #4a5568; padding: 0.5rem; font-size: 0.8rem;" onclick="transformChatToBox()">📦 Salva Chat</button>
+        </div>
+
+        <div class="nav-tabs">
+            <div class="tab-item active" id="tab-ai" onclick="switchView('ai-section', 'tab-ai')">🤖 Chat IA</div>
+            <div class="tab-item" id="tab-community" onclick="switchView('community-section', 'tab-community')">👥 Community</div>
+            <div class="tab-item" id="tab-subjects" onclick="switchView('subjects-section', 'tab-subjects')">🗂️ Materie</div>
+        </div>
+
+        <div class="main-content">
+            <!-- SEZIONE 1: CHAT ASSISTENTE -->
+            <div id="ai-section" class="view-section active">
+                <div class="ai-features">
+                    <button class="btn btn-secondary" onclick="alert('IA: Creazione flashcard in corso...')">📝 Flashcard</button>
+                    <button class="btn btn-secondary" onclick="alert('IA: Elaborazione riassunto dell\'argomento...')">⏱️ Riassunto</button>
+                    <button class="btn btn-secondary" onclick="activateQuizMode()">❓ Avvia Quiz</button>
+                    <button class="btn btn-secondary" onclick="alert('IA: Generazione podcast/video esplicativo...')">🎙️ Spiegazione</button>
+                </div>
+                
+                <div class="chat-container">
+                    <div class="chat-messages" id="chat-box">
