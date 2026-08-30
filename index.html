@@ -137,8 +137,21 @@
     </div>
 
     <script>
-        // Funzione di accesso senza form tag (IMPOSSIBILE CHE DA ERRORE 404 O REFRESH)
+                // Funzione di accesso corretta per smartphone
         function effettuaAccesso() {
+            const nome = document.getElementById('u-name').value || 'Studente';
+            const classe = document.getElementById('u-class').value || '-';
+            const target = document.getElementById('u-target').value || '-';
+
+            // Inserisce i dati nei testi della dashboard
+            document.getElementById('label-name').innerText = "👋 Ciao, " + nome;
+            document.getElementById('label-details').innerText = classe + " | Obiettivo: " + target;
+
+            // Nasconde il login e mostra la dashboard usando block (più compatibile con i telefoni)
+            document.getElementById('login-page').style.display = 'none';
+            document.getElementById('main-dashboard').style.display = 'block';
+        }
+
             const nome = document.getElementById('u-name').value || 'Studente';
             const eta = document.getElementById('u-age').value || '-';
             const classe = document.getElementById('u-class').value || '-';
