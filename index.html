@@ -10,311 +10,171 @@
             --bg-white: #ffffff;
             --bg-gray: #f8f9fa;
             --text-dark: #2d3748;
-            --text-muted: #718096;
             --primary-green: #57886c;
-            --primary-green-hover: #436a53;
-            --primary-green-light: #eef4f0;
             --border-color: #e2e8f0;
         }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
+        body { background-color: var(--bg-gray); color: var(--text-dark); min-height: 100vh; padding: 10px; }
+        
+        /* SCHERMATA LOGIN */
+        .login-box { background: var(--bg-white); padding: 30px; border-radius: 12px; border: 1px solid var(--border-color); max-width: 400px; margin: 40px auto; }
+        .login-box h1 { color: var(--primary-green); text-align: center; margin-bottom: 20px; font-size: 1.6rem; }
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; margin-bottom: 5px; font-size: 0.85rem; font-weight: 600; }
+        .input-group input { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.95rem; }
+        
+        /* BOTTONI */
+        .btn { width: 100%; padding: 12px; background: var(--primary-green); color: white; border: none; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; }
+        .btn-action { padding: 8px 12px; font-size: 0.85rem; background: var(--bg-gray); color: var(--text-dark); border: 1px solid var(--border-color); border-radius: 6px; }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Montserrat', sans-serif;
-        }
+        /* DASHBOARD (NASCOSTA ALL'INIZIO) */
+        #main-dashboard { display: none; background: var(--bg-white); border-radius: 12px; border: 1px solid var(--border-color); min-height: 80vh; flex-direction: column; overflow: hidden; }
+        .user-bar { background: #eef4f0; padding: 10px; font-size: 0.8rem; color: var(--primary-green); font-weight: 600; display: flex; justify-content: space-between; }
+        .tabs { display: flex; border-bottom: 1px solid var(--border-color); }
+        .tab-btn { flex: 1; text-align: center; padding: 12px 0; font-size: 0.85rem; font-weight: 600; cursor: pointer; color: #718096; border-bottom: 3px solid transparent; }
+        .tab-btn.active { color: var(--primary-green); border-bottom-color: var(--primary-green); background: #eef4f0; }
+        .content-area { padding: 15px; flex: 1; }
+        .panel { display: none; }
+        .panel.active { display: block; }
 
-        body {
-            background-color: var(--bg-gray);
-            color: var(--text-dark);
-            min-height: 100vh;
-        }
+        /* CHAT BOX */
+        .chat-box { border: 1px solid var(--border-color); border-radius: 8px; height: 300px; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 10px; background: var(--bg-gray); margin-top: 10px; }
+        .msg { padding: 8px 12px; border-radius: 8px; font-size: 0.9rem; max-width: 85%; }
+        .msg.ai { background: white; align-self: flex-start; border: 1px solid var(--border-color); }
+        .msg.user { background: var(--primary-green); color: white; align-self: flex-end; }
+        .chat-input-area { display: flex; gap: 5px; margin-top: 10px; }
+        .chat-input-area input { flex: 1; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; }
+        .chat-input-area button { width: auto; padding: 0 15px; }
 
-        /* SCHERMATA DI ACCESSO (LOGIN) */
-        #login-screen {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            padding: 1rem;
-        }
-
-        .login-container {
-            background: var(--bg-white);
-            padding: 2.5rem;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-            width: 100%;
-            max-width: 450px;
-            border: 1px solid var(--border-color);
-        }
-
-        .login-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .login-header h1 {
-            font-size: 1.8rem;
-            font-weight: 600;
-            color: var(--primary-green);
-            margin-bottom: 0.5rem;
-        }
-
-        .login-header p {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
-
-        .form-group {
-            margin-bottom: 1.25rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: #4a5568;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 0.95rem;
-            background-color: var(--bg-gray);
-            outline: none;
-        }
-
-        .form-group input:focus {
-            border-color: var(--primary-green);
-            background-color: #fff;
-        }
-
-        /* APPLICAZIONE REALE (DASHBOARD) - NASCOSTA ALL'INIZIO */
-        #main-app {
-            display: none; 
-            flex-direction: column;
-            height: 100vh;
-        }
-
-        .user-info-bar {
-            background-color: var(--primary-green-light);
-            padding: 0.5rem 1rem;
-            font-size: 0.75rem;
-            color: var(--primary-green);
-            font-weight: 500;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .header {
-            background-color: var(--bg-white);
-            padding: 1rem;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .header h3 {
-            color: var(--primary-green);
-            font-size: 1.2rem;
-        }
-
-        .nav-tabs {
-            display: flex;
-            background: var(--bg-white);
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .tab-item {
-            flex: 1;
-            text-align: center;
-            padding: 0.9rem 0;
-            font-weight: 500;
-            font-size: 0.85rem;
-            cursor: pointer;
-            color: var(--text-muted);
-            border-bottom: 3px solid transparent;
-        }
-
-        .tab-item.active {
-            color: var(--primary-green);
-            border-bottom-color: var(--primary-green);
-            background-color: var(--primary-green-light);
-        }
-
-        .main-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 1rem;
-        }
-
-        .view-section {
-            display: none;
-        }
-
-        .view-section.active {
-            display: block;
-        }
-
-        /* INTERFACCIA CHAT IA */
-        .chat-container {
-            background: var(--bg-white);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            height: 52vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .chat-messages {
-            padding: 1rem;
-            overflow-y: auto;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .message {
-            padding: 0.75rem 1rem;
-            border-radius: 12px;
-            max-width: 85%;
-            font-size: 0.9rem;
-            line-height: 1.4;
-        }
-
-        .message.ai {
-            background-color: var(--bg-gray);
-            align-self: flex-start;
-        }
-
-        .message.user {
-            background-color: var(--primary-green);
-            color: white;
-            align-self: flex-end;
-        }
-
-        .chat-controls {
-            padding: 0.75rem;
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .chat-controls input {
-            flex: 1;
-            padding: 0.75rem;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            outline: none;
-        }
-
-        .btn {
-            padding: 0.75rem 1rem;
-            background-color: var(--primary-green);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        .btn:hover { background-color: var(--primary-green-hover); }
-
-        .ai-features {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .btn-secondary {
-            background-color: var(--bg-white);
-            color: var(--text-dark);
-            border: 1px solid var(--border-color);
-        }
-
-        .grid-layout {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .card-box {
-            background: var(--bg-white);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 1.5rem 1rem;
-            text-align: center;
-            font-weight: 500;
-        }
+        /* GRIDS */
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px; }
+        .card { background: var(--bg-gray); border: 1px solid var(--border-color); padding: 15px; border-radius: 8px; text-align: center; font-size: 0.9rem; font-weight: 600; }
     </style>
 </head>
 <body>
 
-    <!-- SCHERMATA 1: ACCESSO (LOGIN) -->
-    <div id="login-screen">
-        <div class="login-container">
-            <div class="login-header">
-                <h1>StudentHub1</h1>
-                <p>Configura il tuo spazio di studio intelligente</p>
+    <!-- PAGINA DI ACCESSO -->
+    <div id="login-page">
+        <div class="login-box">
+            <h1>StudentHub1</h1>
+            <!-- Nota: rimosso il tag <form> per evitare qualsiasi refresh automatico sui telefoni -->
+            <div class="input-group">
+                <label>Nome (Facoltativo)</label>
+                <input type="text" id="u-name" placeholder="Es. Mario">
             </div>
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="studentName">Nome (Facoltativo)</label>
-                    <input type="text" id="studentName" placeholder="Es. Mario">
-                </div>
-                <div class="form-group">
-                    <label for="studentAge">Età</label>
-                    <input type="number" id="studentAge" required min="6" max="99" placeholder="Es. 16">
-                </div>
-                <div class="form-group">
-                    <label for="studentClass">Classe / Anno di corso</label>
-                    <input type="text" id="studentClass" required placeholder="Es. 3A Liceo, Università...">
-                </div>
-                <div class="form-group">
-                    <label for="targetGrade">Voto obiettivo</label>
-                    <input type="text" id="targetGrade" required placeholder="Es. 8/10, 30L...">
-                </div>
-                <button type="submit" class="btn" style="width: 100%; padding: 0.85rem; margin-top: 1rem;">Inizia a Studiare</button>
-            </form>
+            <div class="input-group">
+                <label>Età</label>
+                <input type="number" id="u-age" placeholder="Es. 16">
+            </div>
+            <div class="input-group">
+                <label>Classe</label>
+                <input type="text" id="u-class" placeholder="Es. 3A Liceo">
+            </div>
+            <div class="input-group">
+                <label>Voto Obiettivo</label>
+                <input type="text" id="u-target" placeholder="Es. 8/10">
+            </div>
+            <button class="btn" onclick="effettuaAccesso()">Inizia a Studiare</button>
         </div>
     </div>
 
-    <!-- SCHERMATA 2: APPLICAZIONE (DASHBOARD) -->
-    <div id="main-app">
-        <div class="user-info-bar">
-            <span id="profile-name">👋 Ciao</span>
-            <span id="profile-details">Classe: - | Target: -</span>
+    <!-- SITO REALE / DASHBOARD -->
+    <div id="main-dashboard">
+        <div class="user-bar">
+            <span id="label-name">Studente</span>
+            <span id="label-details">Classe | Target</span>
         </div>
 
-        <div class="header">
-            <h3 id="section-title">🤖 Assistente IA</h3>
-            <button class="btn" style="background-color: #4a5568; padding: 0.5rem; font-size: 0.8rem;" onclick="transformChatToBox()">📦 Salva Chat</button>
+        <div class="tabs">
+            <div class="tab-btn active" id="t1" onclick="cambiaScheda('sezione-ia', 't1')">🤖 Chat IA</div>
+            <div class="tab-btn" id="t2" onclick="cambiaScheda('sezione-com', 't2')">👥 Community</div>
+            <div class="tab-btn" id="t3" onclick="cambiaScheda('sezione-mat', 't3')">🗂️ Materie</div>
         </div>
 
-        <div class="nav-tabs">
-            <div class="tab-item active" id="tab-ai" onclick="switchView('ai-section', 'tab-ai')">🤖 Chat IA</div>
-            <div class="tab-item" id="tab-community" onclick="switchView('community-section', 'tab-community')">👥 Community</div>
-            <div class="tab-item" id="tab-subjects" onclick="switchView('subjects-section', 'tab-subjects')">🗂️ Materie</div>
-        </div>
-
-        <div class="main-content">
-            <!-- SEZIONE 1: CHAT ASSISTENTE -->
-            <div id="ai-section" class="view-section active">
-                <div class="ai-features">
-                    <button class="btn btn-secondary" onclick="alert('IA: Creazione flashcard in corso...')">📝 Flashcard</button>
-                    <button class="btn btn-secondary" onclick="alert('IA: Elaborazione riassunto dell\'argomento...')">⏱️ Riassunto</button>
-                    <button class="btn btn-secondary" onclick="activateQuizMode()">❓ Avvia Quiz</button>
-                    <button class="btn btn-secondary" onclick="alert('IA: Generazione podcast/video esplicativo...')">🎙️ Spiegazione</button>
+        <div class="content-area">
+            <!-- SCHEDA 1: IA -->
+            <div id="sezione-ia" class="panel active">
+                <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+                    <button class="btn-action" onclick="alert('IA: Flashcard pronte!')">📝 Flashcard</button>
+                    <button class="btn-action" onclick="alert('IA: Riassunto generato!')">⏱️ Riassunto</button>
+                    <button class="btn-action" onclick="avviaQuiz()">❓ Quiz</button>
+                    <button class="btn-action" style="background:#4a5568; color:white;" onclick="salvaChatInCasella()">📦 Salva Chat</button>
                 </div>
-                
-                <div class="chat-container">
-                    <div class="chat-messages" id="chat-box">
+                <div class="chat-box" id="box-messaggi">
+                    <div class="msg ai">Ciao! Chiedimi un riassunto, spiegazioni o premi "Quiz" per metterti alla prova!</div>
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" id="input-messaggio" placeholder="Scrivi qui...">
+                    <button class="btn" onclick="inviaMessaggioChat()">Invia</button>
+                </div>
+            </div>
+
+            <!-- SCHEDA 2: COMMUNITY -->
+            <div id="sezione-com" class="panel">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h3 style="font-size:0.95rem;">Appunti condivisi</h3>
+                    <button class="btn-action">+ Carica</button>
+                </div>
+                <div class="grid">
+                    <div class="card">📝 Divina Commedia<br><span style="font-size:0.7rem; color:#718096;">Da Elena</span></div>
+                    <div class="card">📐 Formule Fisica<br><span style="font-size:0.7rem; color:#718096;">Da Marco</span></div>
+                </div>
+            </div>
+
+            <!-- SCHEDA 3: MATERIE -->
+            <div id="sezione-mat" class="panel">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h3 style="font-size:0.95rem;">Le tue Caselle</h3>
+                    <button class="btn-action" onclick="aggiungiMateria()">+ Nuova</button>
+                </div>
+                <div class="grid" id="container-materie">
+                    <div class="card" style="background:#eef4f0; color:var(--primary-green);">📚 Generale</div>
+                    <div class="card">📐 Matematica</div>
+                    <div class="card">🌍 Storia</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Funzione di accesso senza form tag (IMPOSSIBILE CHE DA ERRORE 404 O REFRESH)
+        function effettuaAccesso() {
+            const nome = document.getElementById('u-name').value || 'Studente';
+            const eta = document.getElementById('u-age').value || '-';
+            const classe = document.getElementById('u-class').value || '-';
+            const target = document.getElementById('u-target').value || '-';
+
+            // Inserisce i dati nei testi della dashboard
+            document.getElementById('label-name').innerText = "👋 Ciao, " + nome;
+            document.getElementById('label-details').innerText = classe + " | Obiettivo: " + target;
+
+            // Nasconde il login e mostra il sito reale usando i blocchi CSS puri
+            document.getElementById('login-page').style.display = 'none';
+            document.getElementById('main-dashboard').style.display = 'flex';
+        }
+
+        function cambiaScheda(pannelloId, bottoneId) {
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(pannelloId).classList.add('active');
+            document.getElementById(bottoneId).classList.add('active');
+        }
+
+        function inviaMessaggioChat() {
+            const input = document.getElementById('input-messaggio');
+            if(input.value.trim() === "") return;
+
+            const box = document.getElementById('box-messaggi');
+            const uMsg = document.createElement('div');
+            uMsg.className = 'msg user';
+            uMsg.innerText = input.value;
+            box.appendChild(uMsg);
+
+            input.value = "";
+            box.scrollTop = box.scrollHeight;
+
+            setTimeout(() => {
+                const aiMsg = document.createElement('div');
+                aiMsg.className = 'msg ai';
+                aiMsg.innerText = "Ottima domanda! Quando collegheremo Google Gemini potrò generare risposte complete per te.";
